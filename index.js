@@ -1,11 +1,10 @@
 var model = require("./model");
-const tableName = "Movies";
 
-var table = new model();
+var table = new model("Movies");
 console.log("Key:", table.accessKeyId);
 console.log("Secret:", table.secretAccessKey);
 var schema = {
-    TableName: tableName,
+    TableName: table.tableName,
     KeySchema: [
         { AttributeName: "year", KeyType: "HASH" },  //Partition key
         { AttributeName: "title", KeyType: "RANGE" }  //Sort key
@@ -21,13 +20,17 @@ var schema = {
 };
 // table.create(schema);
 
-table.put({
-    TableName: tableName,
-    Item: {
-        year: 1984,
-        title: "Amadeus"
-    }
-});
+// table.put({
+//     TableName: table.tableName,
+//     Item: {
+//         year: 2017,
+//         title: "Logan"
+//     }
+// });
 
 // console.log("DocumentClient API version", table.documentClient.)
-console.log("end:", tableName);
+// console.log("end:", this.tableName);
+var items = table.findByYear({
+    year: 2017
+});
+console.log(items.length);

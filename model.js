@@ -3,9 +3,11 @@ aws.config.update({
     region: "ap-southeast-1"
 });
 
+// 
 class Model {
-    constructor() {
+    constructor(tableName) {
         this.db = new aws.DynamoDB();
+        this.tableName = tableName;
         this.accessKeyId = aws.config.credentials.accessKeyId;
         this.secretAccessKey = aws.config.credentials.secretAccessKey;
         this.documentClient = new aws.DynamoDB.DocumentClient({
@@ -14,7 +16,7 @@ class Model {
             secretAccessKey: this.secretAccessKey
           });
     }
-    create(tableParams) {
+    create(tableParams) {    
         console.log("Create method", tableParams.TableName);
 
         this.db.createTable(tableParams, function (){
@@ -24,12 +26,9 @@ class Model {
                 console.log("Table created.", JSON.st.tableParams.TableNameringify(data, null, 2));
         })
     }
+    
     drop() {
         console.log("Drop method");
-    }
-    
-    insert() {
-        console.log("Insert method");
     }
     put(item) {
         this.documentClient.put(item, function(error, data) {
@@ -39,10 +38,22 @@ class Model {
                 console.log("Item added ", JSON.stringify(data, null, 2));
         });
     }
-    query(params) {
+    findByYear(queryData) {
+        var params = {
+            ExpressionAttributeValues: {
+                "year": queryData.year
+            },
+            KeyConditionExpression: "#yr = :year",
+            ExpressionAttributeNames: {
+                "#yr": "year"
+            },
+            TableName: this.tableName
+        };
         this.documentClient.query(params, function(error, data) {
             if (error) 
                 console.error("Query error ", JSON.stringify(error, null, 2));
+            else
+                return data.Items;
         });
     }
 }
