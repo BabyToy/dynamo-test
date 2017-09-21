@@ -1,7 +1,9 @@
 var model = require("./model");
 
 var table = new model();
-table.create({
+console.log("Key:", table.accessKeyId);
+console.log("Secret:", table.secretAccessKey);
+var schema = {
     TableName: "Movies",
     KeySchema: [
         { AttributeName: "year", KeyType: "HASH" },  //Partition key
@@ -15,5 +17,6 @@ table.create({
         ReadCapacityUnits: 10,
         WriteCapacityUnits: 10
     }
-});
-console.log("end", table.tableParams.TableName);
+};
+table.create(schema);
+console.log("end:", table.tableParams.TableName);
