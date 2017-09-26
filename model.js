@@ -18,6 +18,8 @@ class Model {
     });
   }
   create (tableParams) {
+    console.log('Create method', tableParams.TableName);
+
     this.db.createTable(tableParams, function (error, data) {
       if (error) {
         console.error('Error creating table ', JSON.stringify(error, null, 2));
