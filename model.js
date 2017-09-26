@@ -18,8 +18,6 @@ class Model {
     });
   }
   create (tableParams) {
-    console.log('Create method', tableParams.TableName);
-
     this.db.createTable(tableParams, function (error, data) {
       if (error) {
         console.error('Error creating table ', JSON.stringify(error, null, 2));
@@ -29,18 +27,38 @@ class Model {
     })
   }
 
-  drop() {
+  drop () {
     console.log('Drop method');
   }
-  put(item) {
-    this.documentClient.put(item, function (error, data) {
-      if (error)
+  get (item) {
+    this.documentClient.get(item, function (error, data) {
+      if (error) {
         console.error('Error adding item ', JSON.stringify(error, null, 2));
-      else
+      } else {
         console.log('Item added ', JSON.stringify(data, null, 2));
+      }
     });
   }
-  findByYear(queryData, callBack) {
+  put (item) {
+    this.documentClient.put(item, function (error, data) {
+      console.log('Attempting to add', JSON.stringify(item, null, 2));
+      if (error) {
+        console.error('Error adding item ', JSON.stringify(error, null, 2));
+      } else {
+        console.log('Item added ', JSON.stringify(data, null, 2));
+      }
+    });
+  }
+  update (item) {
+    this.documentClient.update(item, function (error, data) {
+      if (error) {
+        console.log('Error updating', JSON.stringify(error, null, 2));
+      } else {
+        console.log('Update OK');
+      }
+    });
+  }
+  findByYear (queryData, callBack) {
     var params = {
       TableName: this.tableName,
       KeyConditionExpression: '#yr = :yyyy',
